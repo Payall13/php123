@@ -1,0 +1,38 @@
+<form action ="index.php"method="post" enctype="multipart/form-data">
+	<input type="text" name="txtroll" placeholder="enter roll no"></br>	
+	<input type="text" name="txtstdnm" placeholder="enter student name"></br>
+	<input type="file" name="FileUpload1" id="imgInp" accept=".png,.jpg,.jpeg"></br>
+	<img src ="" id="blah" alt="select image" height="150" width="150"></br>
+	<input type="submit" value="save">
+</form>
+
+<?php
+	if(isset($_POST["txtroll"]))
+	{
+		$con=mysqli_connect("localhost","root","","college_mgt");
+		if($con)
+		{
+			$roll=$_POST['txtroll'];
+			$nm=$_POST['txtstdnm'];
+			$target_dir="images/";
+			$name=rand(150,480000);
+			$extension=pathinfo($_FILES["FileUpload1"]["name"],PATHINFO_EXTENSION);
+			$fnm=$name.$extension;
+			move_uploaded_file ($_FILES["FileUpload1"] ["tmp_name"],$target_dir.$name.".".$extension);
+			$sql="INSERT INTO`stud`('roll_no','stud_name','prof_picture')values('$roll','$nm','$fnm')";
+			mysqli_query($con,$sql);
+		}
+	}
+?>
+
+<script>
+	imgInp.onchange=evt=>
+		{
+			const[file]=imgInp.files
+			if(file)
+			{
+				blah.src=URL.createObjectURL(file)
+			}
+		}
+	
+</script>
